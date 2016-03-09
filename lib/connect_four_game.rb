@@ -13,73 +13,81 @@ class ConnectFourGame
     @player2 = Player.new("O")
     @play_column_num = nil
     @last_row_played = nil
+    @play_again = nil
   end
 
 
 
   def play_game
-    puts "Let's play Connect Four!\n\n"
-    player_name(@player1)
-    puts
+    if !@play_again
+      puts "Let's play Connect Four!\n\n"
+      player_name(@player1)
+      puts
 
-    player_name(@player2)
-    puts
+      player_name(@player2)
+      puts
+    else
+      @play_again = nil
+    end
 
     grid_sum
 
     while true
       select_column(@player1)
-      if !column_moves_left?
+      until column_moves_left?
         puts "That column is full.  Pick another column."
         select_column(@player1)
-      else
-        move(@player1)
+      end
 
-        grid_sum
+      move(@player1)
 
-        if vertical_win?(@player1) || horizontal_win?(@player1)
-          puts "Connect Four! #{@player1.name} wins!"
+      grid_sum
+
+      if vertical_win?(@player1) || horizontal_win?(@player1)
+        puts "Connect Four! #{@player1.name} wins!"
+        return
+      end
+
+      if grid_full?
+        puts "Sorry, no more moves left. It's a draw."
+        if play_again?
+          @play_again = true
+          clear_grid
+          play_game
+        else
           return
-        end
-
-        if grid_full?
-          puts "Sorry, no more moves left. It's a draw."
-          if play_again?
-            clear_grid
-            play_game
-          else
-            return
-          end
         end
       end
 
       select_column(@player2)
-      if !column_moves_left?
+      until column_moves_left?
         puts "That column is full.  Pick another column."
         select_column(@player2)
-      else
-        move(@player2)
+      end
 
-        grid_sum
+      move(@player2)
 
-        if vertical_win?(@player2) || horizontal_win?(@player2)
-          puts "Connect Four! #{@player2.name} wins!"
+      grid_sum
+
+      if vertical_win?(@player2) || horizontal_win?(@player2)
+        puts "Connect Four! #{@player2.name} wins!"
+        return
+      end
+
+      if grid_full?
+        puts "Sorry, no more moves left. It's a draw."
+        if play_again?
+          @play_again = true
+          clear_grid
+          play_game
+        else
           return
-        end
-
-        if grid_full?
-          puts "Sorry, no more moves left. It's a draw."
-          if play_again?
-            clear_grid
-            play_game
-          else
-            return
-          end
         end
       end
     end
   end
 
+private
 
   def valid_column?
     @play_column_num.between?(1, @game_grid.columns)
