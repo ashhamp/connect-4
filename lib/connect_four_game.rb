@@ -54,6 +54,7 @@ class ConnectFourGame
           @play_again = true
           clear_grid
           play_game
+          return
         else
           return
         end
