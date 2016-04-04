@@ -155,12 +155,12 @@ private
       if square == player.game_piece
         match += 1
       else
-        unless match == 4
+        unless match >= 4
           match = 0
         end
       end
     end
-    if match == 4
+    if match >= 4
       return true
     else
       return false
